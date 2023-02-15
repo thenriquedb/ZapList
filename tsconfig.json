@@ -10,6 +10,17 @@
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "baseUrl": "./",
+    "paths": {
+      "@modules/*": [
+        "./src/modules/*"
+      ],
+      "@routes/*": [
+        "./src/routes/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
+      ],
+    }
   },
   "exclude": [
     "**/node_modules"
