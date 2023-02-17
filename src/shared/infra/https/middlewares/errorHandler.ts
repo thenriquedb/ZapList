@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { NextFunction, Request, Response } from "express";
 
-import { AppError } from "@shared/infra/core/errors/AppError";
+import { AppError } from "@shared/core/errors/AppError";
 
 export function errorHandler(
   err: Error,
