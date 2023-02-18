@@ -2,8 +2,7 @@ import SpotifyWebApiNode from "spotify-web-api-node";
 
 import { AppError } from "@shared/core/errors/AppError";
 import { ITrack } from "@modules/Spotify/entities/Track";
-import { BadRequestError } from "@shared/core/errors/BadRequestError";
-import { ISpotifyAdapter } from "@shared/ports/SpotifyAdapter";
+import { ISpotifyAdapter } from "@shared/ports/ISpotifyAdapter";
 
 export class SpotifyAdapter implements ISpotifyAdapter {
   private spotifyWebApi: SpotifyWebApiNode;
@@ -38,11 +37,6 @@ export class SpotifyAdapter implements ISpotifyAdapter {
 
   public async addTracksToPlaylist(trackUri: string) {
     const playListWillBeUsedId = await this.getPlaylistWillBeUsedId();
-    const trackAlreadyAdded = await this.trackAlreadyAddedIntoPlaylist(trackUri);
-
-    if (trackAlreadyAdded) {
-      throw new BadRequestError("Track already added");
-    }
 
     await this.spotifyWebApi.addTracksToPlaylist(playListWillBeUsedId, [trackUri]);
   }
@@ -68,7 +62,7 @@ export class SpotifyAdapter implements ISpotifyAdapter {
     return playlistTracks.body.items;
   }
 
-  private async trackAlreadyAddedIntoPlaylist(trackUri: string) {
+  public async trackAlreadyAddedIntoPlaylist(trackUri: string) {
     const playlistTracks = await this.getPlaylistTracks();
 
     const track = playlistTracks.find(({ track }) => track.uri === trackUri);

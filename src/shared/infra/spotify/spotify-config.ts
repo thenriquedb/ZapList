@@ -12,9 +12,10 @@ export class SpotifyWebApi {
     if (this.instance == null) {
       const isProduction = process.env.NODE_ENV === "production";
       const accessToken = isProduction ? null : process.env.SPOTIFY_ACCESS_TOKEN;
+
       this.instance = new SpotifyWebApiNode({
-        clientId: "f5f3a3ae89e74b34acb12c215b04169d",
-        clientSecret: "bac3f11a70cc4f448fba2a13c4a63289",
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         redirectUri: "http://google.com/",
         accessToken,
       });
