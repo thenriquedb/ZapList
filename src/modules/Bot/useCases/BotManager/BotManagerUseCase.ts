@@ -1,108 +1,150 @@
+import { IBotRepository } from "@modules/Bot/repositories/IBotRepository";
 import { ITrack } from "@modules/Spotify/entities/Track";
-import { AppError } from "@shared/core/errors/AppError";
-import { ISpotifyAdapter } from "@shared/ports/SpotifyAdapter";
+import { BotResponseCode } from "@shared/core/response-code/BotResponseCode";
+import { ISpotifyAdapter } from "@shared/ports/ISpotifyAdapter";
 
-interface IPersistence {
-  users: Record<
-    string,
-    {
-      search_term: string;
-      search_result: ITrack[];
-      added_history: ITrack[];
-    }
-  >;
-}
-
-const initialData = {
-  search_term: "",
-  search_result: [],
-  added_history: [],
-};
-
-type Event = ["adicionar" | "buscar" | "historico", string | undefined];
-
-const persistence = {
-  users: {},
-} as IPersistence;
+type IResponse =
+  | {
+    code:
+    | BotResponseCode.TRACK_SEARCH_SUCCESSFUL
+    | BotResponseCode.LIST_HISTORY_SUCCESSFUL
+    | BotResponseCode.ADDED_HISTORY_EMPTY;
+    data: ITrack[];
+  }
+  | {
+    code: BotResponseCode.TRACK_ADDED_TO_PLAYLIST_SUCCESSFUL;
+    data: ITrack;
+  }
+  | {
+    code:
+    | BotResponseCode.TRACK_ADDED_TO_PLAYLIST_SUCCESSFUL
+    | BotResponseCode.TRACK_ALREADY_ADDED_ON_PLAYLIST;
+    data: ITrack;
+  }
+  | {
+    code: BotResponseCode.INVALID_INPUT;
+    data: string;
+  }
+  | {
+    code: BotResponseCode.TRACK_NOT_FOUND | BotResponseCode.INVALID_TRACK_ID;
+    data: string;
+  };
 
 export class BotDispatcherUseCase {
   private readonly spotifyAdapter: ISpotifyAdapter;
+  private readonly repository: IBotRepository;
 
-  constructor(spotifyAdapter: ISpotifyAdapter) {
+  constructor(spotifyAdapter: ISpotifyAdapter, repository: IBotRepository) {
     this.spotifyAdapter = spotifyAdapter;
+    this.repository = repository;
   }
 
-  private async searchTracks(query: string, waId: string) {
+  private async searchTracks(query: string, waId: string): Promise<IResponse> {
     try {
       const tracks = await this.spotifyAdapter.searchTracks(query);
 
-      persistence.users[waId].search_term = query;
-      persistence.users[waId].search_result = tracks;
+      this.repository.saveSearch(waId, query, tracks);
 
-      return this.formatSearchTracks(tracks);
+      return {
+        code: BotResponseCode.TRACK_SEARCH_SUCCESSFUL,
+        data: tracks,
+      };
     } catch (error) {
-      throw new AppError(error);
+      console.log("Search tracks error", error);
+
+      return {
+        code: BotResponseCode.TRACK_NOT_FOUND,
+        data: query,
+      };
     }
   }
 
-  private formatSearchTracks(tracks: ITrack[]) {
-    const LINE_BREAK = "\n";
-    const message = [""];
-
-    tracks.forEach((track, index) => {
-      const firstLine = `*${index + 1}) ${track.name}*`;
-      const secondLine = `*Artista*: ${track.artist[0]}`;
-      const thirdLine = `*Albúm*: ${track.album}`;
-      const fourLine = `*Prévia*: ${track.previewUrl}`;
-
-      message.push(firstLine);
-      message.push(secondLine);
-      message.push(thirdLine);
-      message.push(fourLine);
-      message.push(LINE_BREAK);
-    });
-
-    return message.join(LINE_BREAK);
-  }
-
-  private async insertOnPlaylist(message: string, waId: string) {
+  private async insertOnPlaylist(trackIndex: string, waId: string): Promise<IResponse> {
     try {
-      const index = Number(message) - 1;
-      const track = persistence.users[waId].search_result[index];
+      const index = Number(trackIndex) - 1;
 
-      persistence.users[waId].added_history.push(track);
+      const searchResult = this.repository.listSearchResult(waId);
+      console.log({ searchResult });
+      const track = searchResult[index];
+
+      if (!track) {
+        return {
+          code: BotResponseCode.INVALID_TRACK_ID,
+          data: trackIndex,
+        };
+      }
+
+      const trackAlreadyAdded = await this.spotifyAdapter.trackAlreadyAddedIntoPlaylist(
+        track.uri
+      );
+
+      if (trackAlreadyAdded) {
+        return {
+          code: BotResponseCode.TRACK_ALREADY_ADDED_ON_PLAYLIST,
+          data: track,
+        };
+      }
 
       await this.spotifyAdapter.addTracksToPlaylist(track.uri);
+      this.repository.saveTrackOnHistory(waId, track);
 
-      return `${track.name} foi adicionada com sucesso a playlist!`;
+      return {
+        code: BotResponseCode.TRACK_ADDED_TO_PLAYLIST_SUCCESSFUL,
+        data: track,
+      };
     } catch (error) {
-      console.log(error);
+      console.log("Error search tracks", error);
 
-      return `Não foi possível encontrar nenhuma faixa com id *"${message}"*`;
+      return {
+        code: error.responseCode,
+        data: error.message,
+      };
     }
   }
 
-  private listTrackHistory(waId: string) {
-    if (persistence.users[waId].added_history.length === 0) {
-      return `Parece que você ainda não adicionou nenhuma faixa`;
+  private listTrackHistory(waId: string): IResponse {
+    if (this.repository.listTracksAddedHistory(waId).length === 0) {
+      return {
+        code: BotResponseCode.ADDED_HISTORY_EMPTY,
+        data: [],
+      };
     }
 
-    return JSON.stringify(persistence.users[waId].added_history);
+    const tracks = this.repository.listTracksAddedHistory(waId);
+
+    return {
+      code: BotResponseCode.LIST_HISTORY_SUCCESSFUL,
+      data: tracks,
+    };
   }
 
-  async execute(message: string, waId: string): Promise<string> {
-    const defaultMessage =
-      "Seja bem vindo ao Zapfy! Adicione músicas em sua playlist diretamente pelo Whatsapp!. O bot tem suporte aos seguintes comandos:\n\n*Buscar: <nome-da-faixa>*\n*Adicionar: <id-da-faxa>*\n*Historico*";
+  private sanatizeMessage(message: string): [string, string] {
+    const delimiterIndex = message.indexOf(" ");
+    let command = "";
+    let data = "";
 
-    const command = message.substring(0, message.indexOf(" "));
-    const data = message.substring(message.indexOf(" ") + 1);
-    let response = defaultMessage;
-
-    if (!persistence.users[waId]) {
-      persistence.users[waId] = initialData;
+    if (delimiterIndex >= 0) {
+      command = message.substring(0, delimiterIndex);
+      data = message.substring(delimiterIndex + 1);
+    } else {
+      command = message;
     }
 
-    switch (command.toLowerCase()) {
+    return [command.toLowerCase(), data];
+  }
+
+  async execute(message: string, waId: string): Promise<IResponse> {
+    const [command, data] = this.sanatizeMessage(message);
+
+    let response: IResponse = {
+      code: null,
+      data: null,
+    };
+
+    this.repository.initUserRegistryIfNotExists(waId);
+    console.log({ command, data });
+
+    switch (command) {
       case "buscar":
         response = await this.searchTracks(data.trim(), waId);
         break;
@@ -116,7 +158,10 @@ export class BotDispatcherUseCase {
         break;
 
       default:
-        return defaultMessage;
+        return {
+          code: BotResponseCode.INVALID_INPUT,
+          data: command,
+        };
     }
 
     return response;
