@@ -23,6 +23,8 @@ interface IRequest {
   ApiVersion: string;
 }
 
+const botManagerUseCase = botDispatcherUseCaseFactory();
+
 export class BotManagerRequestController {
   private formatSearchTracks(tracks: ITrack[]) {
     const LINE_BREAK = "\n";
@@ -47,8 +49,6 @@ export class BotManagerRequestController {
   async handle(request: Request<unknown, unknown, IRequest>, response: Response) {
     const message = request.body.Body;
     const defaultMessage = `Seja bem vindo ao Zapfy! Adicione músicas em sua playlist diretamente pelo Whatsapp!. O bot tem suporte aos seguintes comandos:\n\n*Buscar: <nome-da-faixa>*\n*Adicionar: <id-da-faxa>*\n*Historico*`;
-
-    const botManagerUseCase = botDispatcherUseCaseFactory();
 
     const botManagerResponse = await botManagerUseCase.execute(
       message,
