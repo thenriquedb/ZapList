@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 
 export function generateFakeTrack(): ITrack {
   return {

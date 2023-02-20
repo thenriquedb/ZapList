@@ -1,4 +1,4 @@
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 
 export type UserRegistry = {
   search_term: string;

@@ -1,5 +1,5 @@
 import { IBotRepository } from "@modules/Bot/repositories/IBotRepository";
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 import { BotResponseCode } from "@shared/core/response-code/BotResponseCode";
 import { ISpotifyAdapter } from "@shared/ports/ISpotifyAdapter";
 

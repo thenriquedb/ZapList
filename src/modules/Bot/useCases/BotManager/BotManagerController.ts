@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import twilio from "twilio";
 
 import { BotResponseCode } from "@shared/core/response-code/BotResponseCode";
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 
 import botDispatcherUseCaseFactory from "../../factories/BotManagerFactory";
 

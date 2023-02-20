@@ -1,7 +1,7 @@
 import SpotifyWebApiNode from "spotify-web-api-node";
 
 import { AppError } from "@shared/core/errors/AppError";
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 import { ISpotifyAdapter } from "@shared/ports/ISpotifyAdapter";
 
 export class SpotifyAdapter implements ISpotifyAdapter {

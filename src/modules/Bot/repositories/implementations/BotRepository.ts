@@ -3,7 +3,7 @@ import {
   IDatabaseSchema,
   UserRegistry,
 } from "@modules/Bot/repositories/IBotRepository";
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 
 export class BotRepository implements IBotRepository {
   private database: IDatabaseSchema = {

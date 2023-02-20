@@ -1,5 +1,5 @@
 import { SpotifyWebApi } from "@shared/infra/spotify";
-import { ITrack } from "@modules/Spotify/entities/Track";
+import { ITrack } from "@modules/Spotify/entities/ITrack";
 import { AppError } from "@shared/infra/core/errors/AppError";
 
 export class SearchTracksRequestUseCase {
