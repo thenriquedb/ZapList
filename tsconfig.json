@@ -17,6 +17,9 @@
       "@routes/*": [
         "./src/routes/*"
       ],
+      "@fakes/*": [
+        "./src/fakes/*"
+      ],
       "@shared/*": [
         "./src/shared/*"
       ],
