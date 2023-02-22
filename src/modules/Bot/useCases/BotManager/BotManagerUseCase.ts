@@ -1,7 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { IBotRepository } from "@modules/Bot/repositories/IBotRepository";
 import { ITrack } from "@modules/Spotify/entities/ITrack";
 import { BotResponseCode } from "@shared/core/response-code/BotResponseCode";
 import { ISpotifyAdapter } from "@shared/ports/ISpotifyAdapter";
+
+type Command = "adicionar" | "add" | "buscar" | "historico" | "listar"
 
 type IResponse =
   | {
@@ -23,11 +26,18 @@ type IResponse =
   }
   | {
     code: BotResponseCode.INVALID_INPUT;
+    /**
+     * Sended input
+     */
     data: string;
   }
   | {
     code: BotResponseCode.TRACK_NOT_FOUND | BotResponseCode.INVALID_TRACK_ID;
     data: string;
+  }
+  | {
+    code: BotResponseCode.INVALID_SEARCH_TRACK_SYNTAX | BotResponseCode.INVALID_ADD_TRACK_SYNTAX;
+    data: null;
   };
 
 export class BotDispatcherUseCase {
@@ -64,7 +74,6 @@ export class BotDispatcherUseCase {
       const index = Number(trackIndex) - 1;
 
       const searchResult = this.repository.listSearchResult(waId);
-      console.log({ searchResult });
       const track = searchResult[index];
 
       if (!track) {
@@ -118,7 +127,7 @@ export class BotDispatcherUseCase {
     };
   }
 
-  private sanatizeMessage(message: string): [string, string] {
+  private sanatizeMessage(message: string): [Command, string] {
     const delimiterIndex = message.indexOf(" ");
     let command = "";
     let data = "";
@@ -130,30 +139,49 @@ export class BotDispatcherUseCase {
       command = message;
     }
 
-    return [command.toLowerCase(), data];
+    return [command.toLowerCase() as Command, data];
+  }
+
+
+  private validateInputSyntax(command: Command, data: string): IResponse | null {
+    if ((command === "adicionar" || command === "add") && !data) {
+      return {
+        code: BotResponseCode.INVALID_ADD_TRACK_SYNTAX,
+        data: null
+      }
+    }
+
+    if (command === "buscar" && !data) {
+      return {
+        code: BotResponseCode.INVALID_SEARCH_TRACK_SYNTAX,
+        data: null
+      }
+    }
+
+    return null;
   }
 
   async execute(message: string, waId: string): Promise<IResponse> {
     const [command, data] = this.sanatizeMessage(message);
+    // console.log({ command, data });
 
-    let response: IResponse = {
-      code: null,
-      data: null,
-    };
+    const syntaxValidate = this.validateInputSyntax(command, data);
+    if (syntaxValidate) return syntaxValidate;
 
-    this.repository.initUserRegistryIfNotExists(waId);
-    console.log({ command, data });
+    let response: IResponse = { code: null, data: null, };
 
-    switch (command) {
+    switch (command as Command) {
       case "buscar":
         response = await this.searchTracks(data.trim(), waId);
         break;
 
       case "adicionar":
+      case "add":
         response = await this.insertOnPlaylist(data.trim(), waId);
         break;
 
       case "historico":
+      case "listar":
         response = this.listTrackHistory(waId);
         break;
 
