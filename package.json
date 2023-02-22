@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "tsx watch ./src/shared/infra/https/app.ts",
+    "dev": "tsx watch ./src/shared/infra/http/server.ts",
     "test": "vitest"
   },
   "devDependencies": {
