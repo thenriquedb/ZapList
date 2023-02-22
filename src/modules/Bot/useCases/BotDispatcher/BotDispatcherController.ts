@@ -48,7 +48,7 @@ export class BotManagerRequestController {
 
   async handle(request: Request<unknown, unknown, IRequest>, response: Response) {
     const message = request.body.Body;
-    const defaultMessage = `Seja bem vindo ao Zapfy! Adicione músicas em sua playlist diretamente pelo Whatsapp!. O bot tem suporte aos seguintes comandos:\n\n*Buscar: <nome-da-faixa>*\n*Adicionar: <id-da-faxa>*\n*Historico*`;
+    const defaultMessage = `Seja bem vindo(a) ao Zapfy! Adicione músicas em sua playlist diretamente pelo Whatsapp!. O bot tem suporte aos seguintes comandos:\n\n*buscar <nome-da-faixa>*\n*add <id-da-faxa>*\n*historico*`;
 
     const botManagerResponse = await botManagerUseCase.execute(
       message,
@@ -74,8 +74,16 @@ export class BotManagerRequestController {
         whatsappMessage = `A faixa ${botManagerResponse.data.name} já foi adiciona a playlist.`;
         break;
 
+      case BotResponseCode.INVALID_SEARCH_TRACK_SYNTAX:
+        whatsappMessage = `Ops, parece que você esqueceu de enviar o termo da busca junto com o comando.\n*buscar <termo>*`;
+        break;
+
+      case BotResponseCode.INVALID_ADD_TRACK_SYNTAX:
+        whatsappMessage = `Ops, parece que você esqueceu de enviar o código da faixa.\n*add <id>*`;
+        break;
+
       case BotResponseCode.TRACK_NOT_FOUND:
-        whatsappMessage = `Não foi possível encontrar nenhum resulta para o termo *${botManagerResponse.data}*`;
+        whatsappMessage = `Não foi possível encontrar nenhum resultado para o termo *${botManagerResponse.data}*`;
         break;
 
       case BotResponseCode.INVALID_TRACK_ID:

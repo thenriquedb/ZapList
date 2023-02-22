@@ -4,7 +4,7 @@ import { ITrack } from "@modules/Spotify/entities/ITrack";
 import { BotResponseCode } from "@shared/core/response-code/BotResponseCode";
 import { ISpotifyAdapter } from "@shared/ports/ISpotifyAdapter";
 
-type Command = "adicionar" | "add" | "buscar" | "historico" | "listar"
+type Command = "adicionar" | "adc" | "buscar" | "historico" | "listar"
 
 type IResponse =
   | {
@@ -144,7 +144,7 @@ export class BotDispatcherUseCase {
 
 
   private validateInputSyntax(command: Command, data: string): IResponse | null {
-    if ((command === "adicionar" || command === "add") && !data) {
+    if ((command === "adicionar" || command === "adc") && !data) {
       return {
         code: BotResponseCode.INVALID_ADD_TRACK_SYNTAX,
         data: null
@@ -176,7 +176,7 @@ export class BotDispatcherUseCase {
         break;
 
       case "adicionar":
-      case "add":
+      case "adc":
         response = await this.insertOnPlaylist(data.trim(), waId);
         break;
 
