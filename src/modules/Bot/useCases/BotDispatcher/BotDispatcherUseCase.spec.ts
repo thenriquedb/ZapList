@@ -5,7 +5,7 @@ import { BotRepository } from "@modules/Bot/repositories/implementations/BotRepo
 import { faker } from "@faker-js/faker";
 import { BotResponseCode } from "@shared/core/response-code/BotResponseCode";
 
-import { BotDispatcherUseCase } from "./BotManagerUseCase";
+import { BotDispatcherUseCase } from "./BotDispatcherUseCase";
 
 describe("BotManagerUseCase", () => {
   let botManagerUseCase: BotDispatcherUseCase;

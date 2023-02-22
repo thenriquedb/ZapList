@@ -1,5 +1,5 @@
 import { BotRepository } from "@modules/Bot/repositories/implementations/BotRepository";
-import { BotDispatcherUseCase } from "@modules/Bot/useCases/BotManager/BotManagerUseCase";
+import { BotDispatcherUseCase } from "@modules/Bot/useCases/BotDispatcher/BotDispatcherUseCase";
 import { SpotifyWebApi } from "@shared/infra/spotify";
 import { SpotifyAdapter } from "@shared/infra/spotify/SpotifyAdapter";
 
