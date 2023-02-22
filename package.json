@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx watch ./src/shared/infra/http/server.ts",
+    "build": "tsup ./src/shared/infra/http/server.ts",
     "test": "vitest"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.10",
     "prettier": "^2.7.1",
+    "tsup": "^6.6.3",
     "tsx": "^3.12.3",
     "typescript": "^4.9.5",
     "vite-tsconfig-paths": "^4.0.5",
