@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx watch ./src/shared/infra/http/server.ts",
+    "start": "NODE_ENV=production node dist/server.js",
     "build": "tsup ./src/shared/infra/http/server.ts",
     "test": "vitest"
   },
