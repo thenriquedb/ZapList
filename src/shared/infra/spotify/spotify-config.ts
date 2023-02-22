@@ -11,11 +11,11 @@ export class SpotifyWebApi {
   static getInstance(): SpotifyWebApiNode {
     if (this.instance == null) {
       const isProduction = process.env.NODE_ENV === "production";
-      const accessToken = isProduction ? null : process.env.SPOTIFY_ACCESS_TOKEN;
+      const accessToken = isProduction ? undefined : process.env.SPOTIFY_ACCESS_TOKEN;
 
       this.instance = new SpotifyWebApiNode({
-        clientId: process.env.SPOTIFY_CLIENT_ID,
-        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+        clientId: process.env.SPOTIFY_CLIENT_ID.trim(),
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET.trim(),
         redirectUri: "http://google.com/",
         accessToken,
       });
@@ -25,7 +25,7 @@ export class SpotifyWebApi {
   }
 
   static async authorizationCodeGrant() {
-    const code = process.env.SPOTIFY_CODE;
+    const code = process.env.SPOTIFY_CODE.trim();
 
     try {
       const data = await this.getInstance().authorizationCodeGrant(code);

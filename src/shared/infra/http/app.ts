@@ -19,6 +19,7 @@ export class App {
     this.app.use(express.json());
 
     if (process.env.NODE_ENV === "production") {
+      console.log("Run in production");
       const INTERVAL = 1000 * 60 * 59; // 59minutes
 
       SpotifyWebApi.authorizationCodeGrant();
