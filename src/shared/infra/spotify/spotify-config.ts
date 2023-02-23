@@ -6,7 +6,6 @@ dotenv.config();
 export class SpotifyWebApi {
   private static instance: SpotifyWebApiNode = null;
   private static tokenExpirationEpoch: number;
-  private static numberOfTimesUpdated = 0;
 
   static getInstance(): SpotifyWebApiNode {
     if (this.instance == null) {
@@ -47,26 +46,28 @@ export class SpotifyWebApi {
   }
 
   static async refreshToken() {
-    const timeLeft = this.tokenExpirationEpoch - new Date().getTime() / 1000;
-    console.log(`Time left: ${Math.floor(timeLeft)} seconds left!`);
+    setInterval(async () => {
+      const timeLeft = this.tokenExpirationEpoch - new Date().getTime() / 1000;
+      const timeLeftInteger = Math.floor(timeLeft);
+      console.log(`Time left: ${timeLeftInteger} seconds left!`);
 
-    // OK, we need to refresh the token. Stop printing and refresh.
-    if (timeLeft === 120) {
-      // Refresh token and print the new time to expiration.
+      // Refresh the token when it has two minutes left
+      if (timeLeftInteger === 120) {
+        try {
+          const data = await this.getInstance().refreshAccessToken();
+          this.tokenExpirationEpoch = Math.floor(
+            new Date().getTime() / 1000 + data.body.expires_in
+          );
 
-      try {
-        const data = await this.getInstance().refreshAccessToken();
-        this.tokenExpirationEpoch = new Date().getTime() / 1000 + data.body.expires_in;
+          const expiresIn = this.tokenExpirationEpoch - new Date().getTime() / 1000;
 
-        console.log(
-          `Refreshed token. It now expires in ${Math.floor(
-            this.tokenExpirationEpoch - new Date().getTime() / 1000
-          )} seconds!`
-        );
-      } catch (error) {
-        // console.log("Could not refresh the token!", error.message);
-        throw new Error(`Could not refresh the token! ${error.message}`);
+          console.log(
+            `Refreshed token. It now expires in ${Math.floor(expiresIn)} seconds!`
+          );
+        } catch (error) {
+          throw new Error(`Could not refresh the token! ${error.message}`);
+        }
       }
-    }
+    }, 1000);
   }
 }
