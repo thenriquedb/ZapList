@@ -20,10 +20,8 @@ export class App {
 
     if (process.env.NODE_ENV === "production") {
       console.log("Run in production");
-      const INTERVAL = 1000 * 60 * 59; // 59minutes
-
       SpotifyWebApi.authorizationCodeGrant();
-      setInterval(SpotifyWebApi.refreshToken, INTERVAL);
+      setInterval(() => SpotifyWebApi.refreshToken(), 1000);
     }
 
     this.app.listen(3000, () => console.log("Server is running"));

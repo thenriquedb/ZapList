@@ -6,7 +6,7 @@ dotenv.config();
 export class SpotifyWebApi {
   private static instance: SpotifyWebApiNode = null;
   private static tokenExpirationEpoch: number;
-  private static numberOfTimesUpdated: number;
+  private static numberOfTimesUpdated = 0;
 
   static getInstance(): SpotifyWebApiNode {
     if (this.instance == null) {
@@ -40,12 +40,13 @@ export class SpotifyWebApi {
         )} seconds!`
       );
     } catch (error) {
-      console.log({ error });
-
-      console.log(
-        "Something went wrong when retrieving the access token!",
-        error.message
+      throw new Error(
+        `Something went wrong when retrieving the access token! ${error.message}`
       );
+      // console.log(
+      //   "Something went wrong when retrieving the access token!",
+      //   error.message
+      // );
     }
   }
 
@@ -55,13 +56,15 @@ export class SpotifyWebApi {
         this.tokenExpirationEpoch - new Date().getTime() / 1000
       )} seconds left!`
     );
-
+    console.log("++this.numberOfTimesUpdated", this.numberOfTimesUpdated, "\n");
+    this.numberOfTimesUpdated += 1;
     // OK, we need to refresh the token. Stop printing and refresh.
-    if (++this.numberOfTimesUpdated > 5) {
+    if (this.numberOfTimesUpdated === 1000 * 60 * 59) {
       // Refresh token and print the new time to expiration.
+      this.numberOfTimesUpdated = 0;
 
       try {
-        const data = await SpotifyWebApi.getInstance().refreshAccessToken();
+        const data = await this.getInstance().refreshAccessToken();
         this.tokenExpirationEpoch = new Date().getTime() / 1000 + data.body.expires_in;
 
         console.log(
@@ -70,7 +73,8 @@ export class SpotifyWebApi {
           )} seconds!`
         );
       } catch (error) {
-        console.log("Could not refresh the token!", error.message);
+        // console.log("Could not refresh the token!", error.message);
+        throw new Error(`Could not refresh the token! ${error.message}`);
       }
     }
   }
