@@ -1,4 +1,8 @@
-# ZapList - Bot para adicionar músicas ao Spotify via WhatsApp
+<p align="center">
+  <img align="center" src="docs/banner.png">
+</p>
+
+# ZapList - Atualize sua playlist diretamente pelo WhatssApp!
 O ZapList é um bot para o WhatsApp que adiciona músicas a uma playlist pré-definida do Spotify. O bot é desenvolvido com o objetivo de receber mensagens de texto com o nome da música enviadas pelo usuário no WhatsApp e, a partir daí, realizar uma busca pela música utilizando a API do Spotify. Caso a música seja encontrada, o bot a adiciona à playlist definida no Spotify.
 
 ## Tecnologias utilizadas
