@@ -49,12 +49,10 @@ export class SpotifyWebApi {
   static async refreshToken() {
     const timeLeft = this.tokenExpirationEpoch - new Date().getTime() / 1000;
     console.log(`Time left: ${Math.floor(timeLeft)} seconds left!`);
-    this.numberOfTimesUpdated += 1;
 
     // OK, we need to refresh the token. Stop printing and refresh.
-    if (timeLeft === 1000 * 60 * 59) {
+    if (timeLeft === 120) {
       // Refresh token and print the new time to expiration.
-      this.numberOfTimesUpdated = 0;
 
       try {
         const data = await this.getInstance().refreshAccessToken();
