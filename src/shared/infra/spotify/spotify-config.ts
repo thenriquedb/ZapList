@@ -43,23 +43,16 @@ export class SpotifyWebApi {
       throw new Error(
         `Something went wrong when retrieving the access token! ${error.message}`
       );
-      // console.log(
-      //   "Something went wrong when retrieving the access token!",
-      //   error.message
-      // );
     }
   }
 
   static async refreshToken() {
-    console.log(
-      `Time left: ${Math.floor(
-        this.tokenExpirationEpoch - new Date().getTime() / 1000
-      )} seconds left!`
-    );
-    console.log("++this.numberOfTimesUpdated", this.numberOfTimesUpdated, "\n");
+    const timeLeft = this.tokenExpirationEpoch - new Date().getTime() / 1000;
+    console.log(`Time left: ${Math.floor(timeLeft)} seconds left!`);
     this.numberOfTimesUpdated += 1;
+
     // OK, we need to refresh the token. Stop printing and refresh.
-    if (this.numberOfTimesUpdated === 1000 * 60 * 59) {
+    if (timeLeft === 1000 * 60 * 59) {
       // Refresh token and print the new time to expiration.
       this.numberOfTimesUpdated = 0;
 
