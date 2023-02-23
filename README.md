@@ -35,7 +35,7 @@ Envie uma mensagem de texto para o número de WhatsApp do bot com o nome da mús
 Por exemplo, para buscar a faixa "Sleep on the Floor" da banda The Lumineers, o usuário pode enviar a mensagem **"buscar Sleep on the Floor"** para o número do WhatsApp do bot. O bot responderá com uma mensagem contendo informações sobre a faixa, incluindo seu ID. Se o usuário desejar adicionar essa faixa à playlist, ele pode enviar a mensagem  `adicionar <id-da-faixa>`, substituindo `<id-da-faixa>` pelo ID retornado pelo bot. O bot então adicionará a faixa à playlist. Para visualizar o histórico de músicas adicionadas, o usuário pode enviar a mensagem "`historico` ou `listar`".
 
 ## Testando
-- Antes de utilizar o bot é necessário enviar a seguinte mensagem **join dinner-dropped** para o número +1 415 523 8886.Após fazer isto o seu número será adicionado a lista de participantes e você já poderá usar o bot normalmente;
+- Antes de utilizar o bot é necessário enviar a seguinte mensagem **join dinner-dropped** para o número `+1 415 523 8886`.Após fazer isto o seu número será adicionado a lista de participantes e você já poderá usar o bot normalmente;
 - Para ver as faixas adicionadas acesse a [playList do spotify](https://open.spotify.com/playlist/3ohcLrslFYtlWAqSqzsLoS?si=d440e71ff2504cf3);
 
 ## Instalação
