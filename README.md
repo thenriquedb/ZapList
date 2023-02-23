@@ -26,7 +26,7 @@ O ZapList é um bot para o WhatsApp que adiciona músicas a uma playlist pré-de
 
 - **`adicionar <id-da-faixa>`** ou **`adc <id-da-faixa>`**: adiciona a faixa correspondente ao ID fornecido à playlist pré-definida do Spotify.
 
-- **`historico**`** ou **`listar`**: retorna um histórico das últimas músicas adicionadas à playlist pelo bot.
+- **`historico`** ou **`listar`**: retorna um histórico das últimas músicas adicionadas à playlist pelo bot.
 
 ## Uso
 Envie uma mensagem de texto para o número de WhatsApp do bot com o nome da música que deseja adicionar à playlist. Se a música for encontrada, o bot a adicionará à playlist pré-definida do Spotify.
