@@ -26,11 +26,11 @@ Envie uma mensagem de texto para o número de WhatsApp do bot com o nome da mús
 
 ### Comandos
 
-- `**Buscar <nome-da-faixa>**`: realiza uma busca no Spotify pela faixa correspondente ao nome fornecido. Se a faixa for encontrada, retorna informações sobre ela, incluindo seu ID, que pode ser usado para adicioná-la à playlist.
+- **`Buscar <nome-da-faixa>`**: realiza uma busca no Spotify pela faixa correspondente ao nome fornecido. Se a faixa for encontrada, retorna informações sobre ela, incluindo seu ID, que pode ser usado para adicioná-la à playlist.
 
-- `**adicionar <id-da-faixa>**`: adiciona a faixa correspondente ao ID fornecido à playlist pré-definida do Spotify.
+- **`adicionar <id-da-faixa>`** ou **`adc <id-da-faixa>`**: adiciona a faixa correspondente ao ID fornecido à playlist pré-definida do Spotify.
 
-- `**historico**`: retorna um histórico das últimas músicas adicionadas à playlist pelo bot.
+- **`historico**`**: retorna um histórico das últimas músicas adicionadas à playlist pelo bot.
 
 Por exemplo, para buscar a faixa "Sleep on the Floor" da banda The Lumineers, o usuário pode enviar a mensagem **"Buscar Sleep on the Floor"** para o número do WhatsApp do bot. O bot responderá com uma mensagem contendo informações sobre a faixa, incluindo seu ID no Spotify. Se o usuário desejar adicionar essa faixa à playlist, ele pode enviar a mensagem **`"adicionar <id-da-faixa>"`**, substituindo `<id-da-faixa>` pelo ID retornado pelo bot. O bot então adicionará a faixa à playlist. Para visualizar o histórico de músicas adicionadas, o usuário pode enviar a mensagem "historico".
 ## Contribuição
