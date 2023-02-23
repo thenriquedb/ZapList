@@ -8,11 +8,11 @@ O ZapList é um bot para o WhatsApp que adiciona músicas a uma playlist pré-de
 ## Tecnologias utilizadas
 - [Twilio API](https://www.twilio.com/) para integrar com o WhatsApp;
 - [spotify-eb-api-node](https://github.com/thelinmichael/spotify-web-api-node) para acessar a API do Spotify;
-- Express como framework web para a aplicação;
-- TypeScript;
+- [Express](https://expressjs.com/pt-br/);
 - [Vitest](https://vitest.dev/);
 - [tsx](https://github.com/esbuild-kit/tsx) para executar a aplicação em ambiente de desenvolvimento;
 - [tsup](https://github.com/egoist/tsup) para gerar build de produção;
+- TypeScript;
 - Clean Architecture para organizar o código;
 
 ## Instalação

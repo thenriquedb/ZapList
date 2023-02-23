@@ -59,6 +59,9 @@ export class SpotifyWebApi {
             new Date().getTime() / 1000 + data.body.expires_in
           );
 
+          this.getInstance().setAccessToken(data.body.access_token);
+          this.getInstance().setRefreshToken(data.body.refresh_token);
+
           const expiresIn = this.tokenExpirationEpoch - new Date().getTime() / 1000;
 
           console.log(

@@ -48,7 +48,7 @@ export class BotManagerRequestController {
 
   async handle(request: Request<unknown, unknown, IRequest>, response: Response) {
     const message = request.body.Body;
-    const defaultMessage = `Seja bem vindo(a) ao Zapfy! Adicione músicas em sua playlist diretamente pelo Whatsapp!. O bot tem suporte aos seguintes comandos:\n\n*buscar <nome-da-faixa>*\n*add <id-da-faxa>*\n*historico*`;
+    const defaultMessage = `Seja bem vindo(a) ao ZapList! Adicione músicas em sua playlist diretamente pelo Whatsapp!. O bot tem suporte aos seguintes comandos:\n\n*buscar <nome-da-faixa>*\n*add <id-da-faxa>*\n*historico*`;
 
     const botManagerResponse = await botManagerUseCase.execute(
       message,
